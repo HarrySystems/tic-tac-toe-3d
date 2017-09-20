@@ -1,0 +1,180 @@
+// https://goo.gl/sddvYm
+
+body {
+	font-size: 16px;
+	background: #ddd;
+	
+	height: 100vh;
+	width: 100vw;
+	
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-family:Arial, helvetica, sans-serif;
+	font-size: 4vh;
+}
+
+.area {
+	background: #fff;
+	//border-radius: .5em;
+	
+	//height: 400px;
+	//width: 250px;
+	
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	
+	.content {
+		> *{
+			text-align: center;
+			width: 100%;
+		}
+	}
+}
+
+button {
+	background: #369;
+	color: #fff;
+	border: 0;
+	margin: 2px;
+	line-height: 2em;
+	border-radius: .2em;
+	cursor: pointer;
+}
+
+#result,
+#game,
+#muppet,
+#who-starts{
+	display: none;
+}
+
+#muppet {
+	background: #000;
+	align-items: center;
+	> div {
+		width: 100%;
+		
+		background: url("https://i.giphy.com/media/yr7n0u3qzO9nG/giphy.webp") no-repeat center center fixed;
+		height: 100%;
+	}
+	
+}
+
+#who-starts > .container {
+	& > h3 {
+		width: 100%;	
+	}
+	
+	& > button {
+		font-size: 2em;
+		width: calc(50% - .02em) ;
+		box-sizing: border-box;
+		float: left;
+		margin: .01em;
+		border: .03em solid #369;
+		background: transparent;
+		text-transform: uppercase;
+		&.x {
+			color: #00a;
+		}
+		&.o {
+			color: #a00;
+		}
+	}	
+}
+
+#game {
+	position: relative;
+	#options {
+		position: absolute;
+		left: 0;
+		top: 0;
+		padding: .2em;
+		
+	}
+	//display: block;
+	//height: 100%;
+	//width: 100%;
+	
+	flex-direction: column;
+	[type="checkbox"] {
+		display: none;
+	}
+	
+	&.x-turn .layer .tile {
+		border-color: #00a;
+	}
+	&.o-turn .layer .tile {
+		border-color: #a00;
+	}
+
+	.layer {
+		// margin-top: .5em;
+		margin-left: -2.5em;
+		height: 5em;
+		width: 9em;
+		transform:
+			rotate(-90deg)
+			rotateY(-60deg)
+			rotateZ(-60deg)
+		;
+		position: relative;
+		
+		.tile {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+			&:hover {
+				background: #ddd;
+			}
+			&.x {
+				//background: #00a;
+				pointer-events: none;
+				&:before {
+					content: "X";
+					color: #00a;
+					font-size: 2em;
+					
+				}
+			}
+			&.o {
+				//background: #a00;
+				pointer-events: none;
+				&:before {
+					content: "O";
+					color: #a00;
+					font-size: 2em;
+					
+				}
+			}
+		}
+	}
+
+	label {
+		display: block;
+		box-sizing: border-box;
+		float: left;
+		cursor: pointer;
+
+		border: 1px solid #aaa;
+		//background: #ccc;
+
+		width: 2em;
+		height: 2em;
+		
+		
+		//position: absolute;
+		
+		// show first layer
+			display: none;
+			&[for*="o"] {
+				display: block;
+			}
+	}
+}
