@@ -1,15 +1,20 @@
+
+link(href='index.scss',lang='scss')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js',lang='js')
+script(src='index.js',type='script/javascript',lang='babel')
+
 .area#result
 	.content
 		h3 X wins!
 		button.goback New Game
-		
-		
+
+
 .area#new-game
 	.content
 		h3 Choose a mode
 		button#pvp Player vs Player
 		button#pvc Player vs CPU
-		
+
 .area#game
 	#options
 		button.goback Abandon Game
@@ -22,6 +27,6 @@
 		h3 Choose one!
 		button.x x
 		button.o o
-		
+
 .area#muppet(style="z-index: 666;")
 	div
