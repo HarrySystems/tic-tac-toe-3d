@@ -81,6 +81,7 @@ class TTT {
 		
 			this.pc = null;
 			this.vs_cpu = false;
+			this.plays = [ ]
 		
 		this.setEvents();
 		//this.setView("who-starts");
@@ -104,6 +105,11 @@ class TTT {
 	executePlay(tile) {
 		if(tile != null)
 		{
+			this.plays.push({
+				player: this.turn,
+				tile: tile
+			})
+
 			$(tile).addClass(this.turn);
 			this.alternatePlayer();
 			
@@ -113,15 +119,131 @@ class TTT {
 	
 	cpuPlay() {
 		if(this.pc == this.turn) {
-			let available = $(".tile:not(.x):not(.o)")
+			// available
+				let available = $(".tile:not(.x):not(.o)")
 
-			let select_id = Math.floor(Math.random() * (available.length - 1));
-			let selected = available.eq(select_id)	
+			// get all possibilities
+				var rows = [];
+				for(let j of game.camadas) {
+					for(let possibilidade of game.possibilidades.mesma_camada) {
+						let row = [] 
+						for(let i of possibilidade)   
+							//row.push($("#p-" + j + "-" + i)[0])
+							row.push("p-" + j + "-" + i)
+
+						rows.push(row)
+					}
+				}
+
+				for(let possibilidade of game.possibilidades.entre_camadas) {
+					let row = []
+					for(let i of possibilidade) {
+						//row.push($("#p-" + i)[0])
+						row.push("p-" + i)
+					}
+					rows.push(row)
+				}
+
+				
+
+
+
+
+			//// get all wins
+			//	let wins = [];
+
+			//// get all looses
+			//	let looses = [];
+
+
+			// get all interferences based on the last play
+				let interferences = []
+				for(
+					let row
+					of rows
+				) {
+					for(
+						let el
+						of row
+					) {
+						if(el == this.plays[this.plays.length - 1].tile.id) {
+							interferences.push(row)
+
+							break;
+						}
+					}
+				}
+
+			// get all interferences available
+				let available_interferences = []
+				let ranking = []
+				for(
+					let row
+					of interferences
+				) {
+					let count_interferences = 0;
+					for(
+						let tile
+						of row
+					) {
+						for(
+							let avl
+							of available
+						) {
+							if(avl.id == tile) {
+								available_interferences.push(tile)
+								count_interferences++;
+							}
+						}
+					}
+					//console.log(count_interferences)
+					ranking.push({
+						interferences: count_interferences,
+						row: row
+					})
+				}
+
+			// ranking looses
+				ranking.sort(function compare(a,b) {
+					if(a.interferences == 0)
+						return 999
+					if (a.interferences < b.interferences)
+						return -1;
+					if (a.interferences > b.interferences)
+						return 1;
+					return 0;
+				})
+				console.log(JSON.stringify(ranking, true, 4))
+
+			// get best plays
+				let best_plays = [];
+				for(
+					let tile
+					of ranking[0].row
+				) {
+					for(
+						let avl
+						of available
+					) {
+						if(avl.id == tile) {
+							best_plays.push(tile)
+						}
+					}
+				}
+				
+			let select_id = Math.floor(Math.random() * (best_plays.length - 1));
+			let selected = document.querySelectorAll("#" + best_plays[select_id])[0]
+			console.log(selected)
+			if(selected == undefined){ 
+				let select_id = Math.floor(Math.random() * (available_interferences.length - 1));
+				selected = document.querySelectorAll("#" + available_interferences[select_id])[0]
+			}
 			this.executePlay(selected);
 		}
 	}
 
 	resetBoard() {
+		this.plays = [ ] 
 		$(".tile").removeClass("o x");
 		$("#game").removeClass("x-trun o-turn");
 		$("#game").addClass(this.turn + "-turn");
@@ -190,7 +312,7 @@ class TTT {
 			for(let j of this.camadas) {
 				for(let possibilidade of this.possibilidades.mesma_camada) {
 					let match = true;
-					for(let i of possibilidade)	
+					for(let i of possibilidade)
 						if(!$("#p-" + j + "-" + i).hasClass(player))
 							match = false;
 					
@@ -253,4 +375,4 @@ class TTT {
 	}
 }
 
-new TTT();
+var game = new TTT();
